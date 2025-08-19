@@ -1,9 +1,12 @@
 import "./App.css";
 import { useEffect, useState, useRef } from "react";
 import api from "./services/axios.js";
+import { FaRegEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 
 function App() {
   const [tasks, setTasks] = useState([]);
+  const [editId, setEditId] = useState(null);
   const inputTask = useRef();
 
   async function getTasks() {
@@ -11,12 +14,25 @@ function App() {
     setTasks(tasksFromApi.data);
   }
 
-  async function createTasks() {
-    await api.post("/task", {
-      task: inputTask.current.value
-    });
-    getTasks();
+  async function handleAddOrEdit() {
+    const text = inputTask.current.value.trim();
+    if (!text) return;
+
+    if (editId) {
+      await api.put(`/task/${editId}`, { task: text });
+      setEditId(null);
+    } else {
+      await api.post("/task", { task: text });
+    }
+
     inputTask.current.value = "";
+    getTasks();
+  }
+
+  function startEdit(task) {
+    inputTask.current.value = task.task;
+    setEditId(task.id);
+    inputTask.current.focus();
   }
 
   async function deleteTasks(id) {
@@ -33,22 +49,28 @@ function App() {
       <div className="box">
         <h1>To-Do List</h1>
 
-        <div className="task">
+        <div>
           <input ref={inputTask} type="text" placeholder="Nova tarefa..." />
-          <button className="buttonAdd" onClick={createTasks}>Add</button>
+          <button className="buttonAdd" onClick={handleAddOrEdit}>
+            {editId ? "Save" : "Add"}
+          </button>
         </div>
 
         <div className="boxTasks">
           {tasks.map((task) => (
             <div className="task" key={task.id}>
-              <p className="boxTask">{task.task}</p>
+              <div className="boxTask">
+                {task.task}
+                <button className="edit-task" onClick={() => startEdit(task)}>
+                  <FaRegEdit />
+                </button>
+              </div>
               <button className="buttonDelete" onClick={() => deleteTasks(task.id)}>
-                Deletar
+                <MdDelete />
               </button>
             </div>
           ))}
         </div>
-
       </div>
     </div>
   );

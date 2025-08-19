@@ -16,6 +16,19 @@ app.delete('/task/:id', async (req, res) => {
     res.status(200).json(req.body)
 })
 
+app.put('/task/:id', async (req, res) => {
+    const updateTask = await prisma.toDoList.update({
+        where: {
+            id: req.params.id
+        },
+        data: {
+            task: req.body.task 
+        },
+    });
+    res.status(200).json(updateTask);
+});
+
+
 app.post('/task', async (req, res) => {
     await prisma.toDoList.create({
         data: {
@@ -26,20 +39,20 @@ app.post('/task', async (req, res) => {
 })
 
 app.get('/task', async (req, res) => {
-    const tarefas = await prisma.toDoList.findMany()
+    const task = await prisma.toDoList.findMany()
 
-    res.status(200).json(tarefas)
+    res.status(200).json(task)
 })
 
-app.get('/',(req, res) => {
+app.get('/', (req, res) => {
     res.json("Wello word")
 })
 
 const port = process.env.PORT || 3000;
 if (process.env.NODE_ENV !== "production") {
-  app.listen(port, () => {
-    console.log(`Servidor rodando em http://localhost:${port}`);
-  });
+    app.listen(port, () => {
+        console.log(`Servidor rodando em http://localhost:${port}`);
+    });
 }
 
 export default app;

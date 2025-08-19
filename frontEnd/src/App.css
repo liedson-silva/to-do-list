@@ -66,6 +66,8 @@ input:focus {
 }
 
 .boxTask {
+  display: flex;
+  justify-content: space-between;
   border: 1px solid rgba(255, 255, 255, 0.1);
   word-break: break-word;
   background: rgba(255, 255, 255, 0.129);
@@ -76,14 +78,25 @@ input:focus {
   margin: 0;
 }
 
+.edit-task {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-size: 16px;
+}
+
+.edit-task:hover {
+  box-shadow: 0 5px 15px #004e92;
+}
+
 .buttonDelete {
-  font-weight: bold;
-  font-size: 15px;
-  padding: 8px;
+  background-color: white;
+  font-size: 16px;
   cursor: pointer;
   border: none;
   border-radius: 0 4px 4px 0;
-  width: 67px;
+  width: 40px;
 }
 
 .buttonDelete:hover {
